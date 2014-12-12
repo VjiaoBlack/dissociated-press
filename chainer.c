@@ -1,7 +1,8 @@
 #include "chainer.h"
 
 int main(int argc, char* argv[]) {
-
+    time_t t;
+    srand((unsigned) time(&t));
     char* file_name = argv[1];
 
     // opens "text.txt", read only
@@ -29,6 +30,9 @@ int main(int argc, char* argv[]) {
     char** words = wordify(file_contents, &num_words);
     free(file_contents);
 
+    first = words[0];
+    last = words[num_words-1];
+
     print_words(words, num_words);
 
     word_map_t* map = malloc(sizeof(word_map_t));
@@ -55,9 +59,41 @@ int main(int argc, char* argv[]) {
     printf("\n\n");
     print_map(map);
 
+
+    print_generation(map);
+
+
+
     free(map);
     free(pairs);
 
+}
+
+int find_word(word_map_t* map, char* word) {
+    int i;
+    for (i = 0; i < map_size; i++) {
+        if ( strcmp((map->pairs)[i].head , word) == 0 ) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void print_generation(word_map_t* map) {
+    int i = 0;
+    char* word;
+    char* tail;
+    int num_words;
+    while( strcmp(word=(map->pairs)[i].head , last)) {
+        printf("%s ",word);
+        num_words = *(map->pairs)[i].num_tails;
+        tail = (map->pairs)[i].tails[rand() / (RAND_MAX / num_words + 1)];
+        i = find_word(map, tail);
+        if (i == -1) {
+            break;
+        }
+    }
+    printf("%s\n",last);
 }
 
 char** wordify(char* string, int* wordz) {
