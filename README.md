@@ -1,4 +1,5 @@
 To use:
+
 make
 ./chainer (input text file)
 
