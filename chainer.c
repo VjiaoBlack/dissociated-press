@@ -14,16 +14,16 @@ int main(int argc, char* argv[]) {
     // moves file pointer back to input
     rewind(fp);
 
-    printf("\nfile size: %d\n", input_length);
+    // printf("\nfile size: %d\n", input_length);
     char* file_contents = malloc(sizeof(char) * input_length);
 
     // gets string from file pointer to file_contents
     fread(file_contents, sizeof(char), input_length, fp);
 
-    printf("file name: %s\n\noriginal file contents:\n\n%s\n\n", file_name, file_contents);
+    // printf("file name: %s\n\noriginal file contents:\n\n%s\n\n", file_name, file_contents);
 
 
-    printf("putting file into array of words...\n");
+    // printf("putting file into array of words...\n");
 
     // wordify also prints the list of words.
     int num_words;
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
     first = words[0];
     last = words[num_words-1];
 
-    print_words(words, num_words);
+    // print_words(words, num_words);
 
     word_map_t* map = malloc(sizeof(word_map_t));
 
@@ -56,12 +56,12 @@ int main(int argc, char* argv[]) {
 
         insert_pair(map,&pairs[i]);
     }
-    printf("\n\n");
-    print_map(map);
+    // printf("\n\n");
+    // print_map(map);
 
-
+    printf("\n");
     print_generation(map);
-
+    printf("\n");
 
 
     free(map);
