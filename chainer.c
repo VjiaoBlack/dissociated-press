@@ -5,6 +5,11 @@ int main(int argc, char* argv[]) {
     srand((unsigned) time(&t));
     char* file_name = argv[1];
 
+    if(argc == 1 ) {
+      printf("No input file!\n");
+      exit(1);  
+    };
+
     // opens "text.txt", read only
     FILE* fp = fopen(file_name, "r");
 
