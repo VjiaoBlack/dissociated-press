@@ -7,7 +7,7 @@ int main(int argc, char* argv[]) {
 
     if(argc == 1 ) {
       printf("No input file!\n");
-      exit(1);  
+      exit(1);
     };
 
     // opens "text.txt", read only

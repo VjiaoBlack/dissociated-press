@@ -2,9 +2,11 @@ To use:
 
 make
 
-
 ./chainer (input text file)
 
+currently implementing (not yet implemented) :
+./chainer (input text file) (numwords)
+This will generate from a random start word and end when word count is up.
 
 
 sample output: (Gettysburg Address)
