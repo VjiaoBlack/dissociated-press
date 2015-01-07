@@ -10,56 +10,49 @@ int main(int argc, char* argv[]) {
       exit(1);
     };
 
-    // opens "text.txt", read only
     FILE* fp = fopen(file_name, "r");
 
-    // gets input length by seeking to end
+    // gets input length (moves fp back to start)
     fseek(fp, 0L, SEEK_END);
     int input_length = ftell(fp);
-    // moves file pointer back to input
     rewind(fp);
 
-    // printf("\nfile size: %d\n", input_length);
+    // gets string from file, puts into file_contents
     char* file_contents = malloc(sizeof(char) * input_length);
-
-    // gets string from file pointer to file_contents
     fread(file_contents, sizeof(char), input_length, fp);
 
-    // printf("file name: %s\n\noriginal file contents:\n\n%s\n\n", file_name, file_contents);
-
-
-    // printf("putting file into array of words...\n");
-
-    // wordify also prints the list of words.
+    // this converts
     int num_words;
     char** words = wordify(file_contents, &num_words);
     free(file_contents);
 
+    // sets first and last word for default, no word-limit function
     first = words[0];
     last = words[num_words-1];
 
-    // print_words(words, num_words);
-
+    // initializes word map
     word_map_t* map = malloc(sizeof(word_map_t));
-
-
     map_size = 0;
 
-    // takes up more space than needed, but avoids realloc every word.
+    // initializes map's array of pairs
     map->pairs = malloc(sizeof(pair_t) * num_words);
 
-    pair_t* pairs = malloc(sizeof(pair_t) * (num_words - 1));
+    // temporary mould to format words into pairs
+    pair_t temp_pair;
 
     int i;
+    int a = 1; // required to form pairs.
 
     // this somehow doesnt work... takes \n separated words into one word...
     for (i = 0; i < num_words - 1; i++) {
-        int a = 1; // placeholder...
-        pairs[i] = (pair_t) {&a,words[i],&words[i+1]};
-        (pairs[i].num_tails)  = malloc(sizeof(int) * 1);
-        *(pairs[i].num_tails)  = 1;
 
-        insert_pair(map,&pairs[i]);
+
+        temp_pair = (pair_t) {&a,words[i],&words[i+1]};
+        (temp_pair.num_tails)  = malloc(sizeof(int) * 1);
+        *(temp_pair.num_tails)  = 1;
+
+        // note that insert_pair COPIES the pair, so this is okay c:
+        insert_pair(map,&temp_pair);
     }
     // printf("\n\n");
     // print_map(map);
@@ -70,7 +63,6 @@ int main(int argc, char* argv[]) {
 
 
     free(map);
-    free(pairs);
 
 }
 
@@ -107,14 +99,13 @@ char** wordify(char* string, int* wordz) {
     int num_words = 0, cur_word_length = 0;
     int first = 0;
 
+    // 'initializes' words array. (will be realloced later, dont worry)
     char** words = malloc(0);
-    words[0] = malloc(0);
 
     int cur_pos = 0;
     // goes through all characters
     do {
         if (string[cur_pos] == '\n' || string[cur_pos] == ' ') {
-            string[cur_pos] = ' ';
 
             words = realloc(words,sizeof(char*) * (num_words+1));
             words[num_words] = malloc(sizeof(char) * cur_word_length);
@@ -208,13 +199,14 @@ int position_of(pair_t* pair, word_map_t* map) {
     return -1;
 }
 
-int is_greater(char* a, char* b) {
+int is_greater(char* a, char* b) { // TODO: fix this.
     int i = 0;
     while ( (a[i] != '\0') && (b[i] != '\0') ) {
         if (a[i] > b[i])
             return 1;
         else if (a[i] < b[i])
             return -1;
+        i++;
     }
     if (a[i] != '\0')
         return 1;
